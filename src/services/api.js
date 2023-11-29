@@ -26,7 +26,7 @@ async function request(method, url, data) {
         let response = await fetch(url, options);
         if (!response.ok) {
             let error = await response.json();
-            throw new Error(error.message);
+            throw new Error(error.error);
         }
 
         if (response.status == 204) {
@@ -36,8 +36,7 @@ async function request(method, url, data) {
         let result = await response.json();
         return result;
     } catch (error) {
-        alert(`Error: ${error.message}`)
-        throw error;
+        throw error.message;
     }
 
 }

@@ -1,4 +1,5 @@
 import { html } from "../lib/lit-html.js";
+import { login } from "../services/userService.js";
 import { createSubmitHandler, saveUser } from "../services/utils.js";
 
 const loginTemplate = (onSubmit) => html`
@@ -29,21 +30,21 @@ export function loginView(ctx) {
 
 async function onSubmit(ctx, data, event) {
     try {
-        if (data.email.trim() == '' || data.password.trim() == '' || data.username.trim() == '') {
+        if (data.email.trim() == '' || data.password.trim() == '') {
             throw new Error('All fields are required!');
         }
 
-        const { objectId, sessionToken } = await register(data.email, data.password, data.username);
+        const { objectId, sessionToken, username } = await login(data.email, data.password);
         const user = {
             objectId,
             sessionToken,
             email: data.email,
-            username: data.username
+            username
         }
         saveUser(user);
         event.target.reset();
         ctx.page.redirect('/');
     } catch (error) {
-        return alert(error.message);
+        return ctx.showMessage(error);
     }
 }

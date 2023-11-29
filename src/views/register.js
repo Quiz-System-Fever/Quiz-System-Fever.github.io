@@ -34,6 +34,10 @@ async function onSubmit(ctx, data, event) {
             throw new Error('All fields are required!');
         }
 
+        if (data.password.trim() != data.repass.trim()) {
+            throw new Error('Passwords must match!');
+        }
+
         const { objectId, sessionToken } = await register(data.email, data.username, data.password);
         const user = {
             objectId,
@@ -45,6 +49,6 @@ async function onSubmit(ctx, data, event) {
         event.target.reset();
         ctx.page.redirect('/');
     } catch (error) {
-        return alert(error.message);
+        return ctx.showMessage(error);
     }
 }
