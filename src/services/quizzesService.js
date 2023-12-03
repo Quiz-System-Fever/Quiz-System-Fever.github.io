@@ -13,5 +13,7 @@ export const createQuiz = async (quizData, userId) => {
             objectId: userId,
         }
     })
-    await post(baseUrl, body);
+    return await post(baseUrl, body);
 };
+
+export const updateQuiz = async (quizId, quizData) => post(`${baseUrl}/${quizId}`, quizData);
