@@ -3,7 +3,7 @@ import { renderContext } from "./middleware/render.js";
 import { logout } from "./services/userService.js";
 import { userContext } from "./services/utils.js";
 import { browseView } from "./views/browse.js";
-import { createView } from "./views/create.js";
+import { editorView } from "./views/editorView/editor.js";
 import { detailsView } from "./views/details.js";
 import { homeView } from "./views/home.js";
 import { loginView } from "./views/login.js";
@@ -17,8 +17,9 @@ page('/', homeView);
 page('/login', loginView);
 page('/register', registerView);
 page('/logout', logout);
-page('/create', createView);
+page('/create', editorView);
 page('/browse', browseView);
 page('/details/:id', detailsView);
+page('/edit/:id', editorView)
 
 page.start();
