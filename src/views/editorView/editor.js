@@ -65,7 +65,7 @@ export async function editorView(ctx) {
     function addQuestion() {
         questions.results.push({
             text: '',
-            answer: [],
+            answers: [],
             correctIndex: 0
         })
         ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz, addQuestion));
