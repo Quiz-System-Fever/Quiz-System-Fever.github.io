@@ -2,10 +2,10 @@ import { html, render } from "../../lib/lit-html.js";
 
 const editAnswerTemplate = (answer, answerIndex, questionIndex, checked, deleteAnswer) => html`
 <label class="radio">
-    <input class="input" type="radio" name="question-${questionIndex + 1}" value="${answerIndex + 1}" ?checked=${checked}/>
+    <input class="input" type="radio" name="question-${questionIndex}" value="${answerIndex}" ?checked=${checked}/>
     <i class="fas fa-check-circle"></i>
 </label>
-<input class="input" type="text" name="answer-${answerIndex + 1}" .value=${answer}/>
+<input class="input" type="text" name="answer-${answerIndex}" .value=${answer}/>
 <button @click=${(event) => deleteAnswer(answerIndex, event)} class="input submit action">
 <i class="fas fa-trash-alt"></i>
 </button>`;
@@ -13,7 +13,7 @@ const editAnswerTemplate = (answer, answerIndex, questionIndex, checked, deleteA
 export const viewAnswerTemplate = (answer, answerIndex, questionIndex, checked) => html`
 <div class="editor-input">
 <label class="radio">
-    <input class="input" type="radio" name="question-${questionIndex}" value="${answerIndex + 1}" ?checked=${checked} />
+    <input class="input" type="radio" name="question-${questionIndex}" value="${answerIndex}" ?checked=${checked} disabled/>
     <i class="fas fa-check-circle"></i>
 </label>
 <span>${answer}</span>

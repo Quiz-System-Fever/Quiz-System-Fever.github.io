@@ -1,4 +1,4 @@
-import { get, post } from "./api.js";
+import { get, post, put } from "./api.js";
 
 const baseUrl = 'https://parseapi.back4app.com/classes/Quizzes';
 
@@ -16,4 +16,4 @@ export const createQuiz = async (quizData, userId) => {
     return await post(baseUrl, body);
 };
 
-export const updateQuiz = async (quizId, quizData) => post(`${baseUrl}/${quizId}`, quizData);
+export const updateQuiz = async (quizId, quizData) => put(`${baseUrl}/${quizId}`, quizData);

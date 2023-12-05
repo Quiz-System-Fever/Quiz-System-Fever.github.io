@@ -31,15 +31,15 @@ const editorTemplate = (onSubmit, quiz, addQuestion) => html`
         <input class="input submit action" type="submit" value="Save">
     </form>
 </div>
-${quiz ? questionsList(quiz.questions, addQuestion) : nothing}
+${quiz ? questionsList(quiz, addQuestion) : nothing}
 </section>`;
 
-const questionsList = (questions, addQuestion) => html`
+const questionsList = (quiz, addQuestion) => html`
 <header class="pad-large">
 <h2>Questions</h2>
 </header>
 <div class="pad-large alt-page">
-${questions.map((q, i) => createQuestionView(q, i))}
+${quiz.questions.map((q, i) => createQuestionView(q, i, quiz.ctx))}
 <article class="editor-question">
 <div class="editor-input">
     <button @click=${addQuestion} class="input submit action"><i class="fas fa-plus-circle"></i>Add question</button>
@@ -58,6 +58,7 @@ export async function editorView(ctx) {
             await getQuestionsByQuizId(quizId)
         ])
         quiz.questions = questions.results;
+        quiz.ctx = ctx
     }
 
     ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz, addQuestion));
@@ -84,7 +85,7 @@ export async function editorView(ctx) {
                 title: data.title,
                 topic: data.topic,
                 description: data.description,
-                questionCount: questions.length
+                questionCount: questions.length || 0
             }
 
             if (quizId) {

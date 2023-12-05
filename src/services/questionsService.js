@@ -1,4 +1,4 @@
-import { get, post } from "./api.js";
+import { deleteReq, get, post } from "./api.js";
 import { getUser } from "./utils.js";
 
 const baseUrl = 'https://parseapi.back4app.com/classes/Question';
@@ -23,7 +23,7 @@ export const createQuestion = async (questionData, quizId) => {
 
 export const getQuestionsByQuizId = async (quizId) => {
     const pointer = {
-        Quizzes: {
+        quiz: {
             __type: 'Pointer',
             'className': 'Quizzes',
             objectId: quizId,
@@ -35,3 +35,5 @@ export const getQuestionsByQuizId = async (quizId) => {
 
     return await get(baseUrl + '?where=' + query);
 }
+
+export const deleteQuestion = (quizId) => deleteReq(`${baseUrl}/${quizId}`, {});
