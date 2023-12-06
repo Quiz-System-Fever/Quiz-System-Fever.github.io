@@ -9,6 +9,7 @@ import { homeView } from "./views/home.js";
 import { loginView } from "./views/login.js";
 import { messageContext } from "./views/message.js";
 import { registerView } from "./views/register.js";
+import { profileView } from "./views/profile.js";
 
 page(userContext);
 page(renderContext);
@@ -20,6 +21,7 @@ page('/logout', logout);
 page('/create', editorView);
 page('/browse', browseView);
 page('/details/:id', detailsView);
-page('/edit/:id', editorView)
+page('/edit/:id', editorView);
+page('/profile', profileView);
 
 page.start();
