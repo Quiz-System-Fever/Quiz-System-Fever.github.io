@@ -49,6 +49,7 @@ export function createQuestionView(question, questionIndex, ctx) {
 
     async function onDelete() {
         if (confirm('Are you sure you want to delete this question?')) {
+            element.remove();
             await deleteQuestion(question.objectId);
             ctx.page.redirect(`/edit/${quizId}`);
         }
@@ -59,25 +60,33 @@ export function createQuestionView(question, questionIndex, ctx) {
         const formData = new FormData(element.querySelector('form'));
 
         const data = {
-            text: formData.get('text'),
+            text: formData.get('text').trim(),
             answers: [],
             correctIndex: Number(formData.get(`question-${questionIndex}`))
         }
 
         for (const pair of formData.entries()) {
             if (pair[0].includes('answer')) {
-                data.answers.push(pair[1]);
+                data.answers.push(pair[1].trim());
             }
         }
 
-        if (question.objectId) {
-            await updateQuestion(question.objectId, data);
-            ctx.showMessage('Question updated successfully.');
-            ctx.page.redirect(`/edit/${quizId}`);
-        } else {
-            await createQuestion(data, quizId);
-            ctx.showMessage('Question created successfully.');
-            ctx.page.redirect(`/edit/${quizId}`);
+        try {
+            if (data.text == '' || data.answers.includes('')) {
+            throw new Error('All fields are required!')    
+            }
+
+            if (question.objectId) {
+                await updateQuestion(question.objectId, data);
+                ctx.showMessage('Question updated successfully.');
+                ctx.page.redirect(`/edit/${quizId}`);
+            } else {
+                await createQuestion(data, quizId);
+                ctx.showMessage('Question created successfully.');
+                ctx.page.redirect(`/edit/${quizId}`);
+            }
+        } catch (error) {
+            ctx.showMessage(error)
         }
     }
 }
