@@ -90,6 +90,7 @@ export async function editorView(ctx) {
 
             if (quizId) {
                 await updateQuiz(quizId, quizData);
+                ctx.showMessage('Quiz updated successfully. Please proceed adding with adding questions.');
             } else {
                 const result = await createQuiz(quizData, userId);
                 ctx.page.redirect(`/edit/${result.objectId}`)

@@ -1,11 +1,11 @@
 import { html, nothing, render } from "../../lib/lit-html.js";
-import { createQuestion, deleteQuestion } from "../../services/questionsService.js";
+import { createQuestion, deleteQuestion, updateQuestion } from "../../services/questionsService.js";
 import { createAnswers, viewAnswerTemplate } from "./answers.js";
 
 const editorTemplate = (question, questionIndex, onCancel, onSave) => html`   
     <div class="layout">
         <div class="question-control">
-            <button @click=${(event) => onSave(questionIndex, event)} class="input submit action"><i class="fas fa-check-double"></i> Save</button>
+            <button @click=${onSave} class="input submit action"><i class="fas fa-check-double"></i> Save</button>
             <button @click=${onCancel} class="input submit action"><i class="fas fa-times"></i> Cancel</button>
         </div>
         <h3>Question ${questionIndex + 1}</h3>
@@ -54,7 +54,7 @@ export function createQuestionView(question, questionIndex, ctx) {
         }
     }
 
-    async function onSave(questionIndex, event){
+    async function onSave(event) {
         event.preventDefault();
         const formData = new FormData(element.querySelector('form'));
 
@@ -62,7 +62,7 @@ export function createQuestionView(question, questionIndex, ctx) {
             text: formData.get('text'),
             answers: [],
             correctIndex: Number(formData.get(`question-${questionIndex}`))
-        } 
+        }
 
         for (const pair of formData.entries()) {
             if (pair[0].includes('answer')) {
@@ -70,7 +70,14 @@ export function createQuestionView(question, questionIndex, ctx) {
             }
         }
 
-        await createQuestion(data, quizId);
-        ctx.page.redirect(`/edit/${quizId}`);
+        if (question.objectId) {
+            await updateQuestion(question.objectId, data);
+            ctx.showMessage('Question updated successfully.');
+            ctx.page.redirect(`/edit/${quizId}`);
+        } else {
+            await createQuestion(data, quizId);
+            ctx.showMessage('Question created successfully.');
+            ctx.page.redirect(`/edit/${quizId}`);
+        }
     }
 }
