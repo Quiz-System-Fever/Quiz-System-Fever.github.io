@@ -46,7 +46,15 @@ export function createAnswers(answers, questionIndex, correctIndex) {
 
     function deleteAnswer(index, event) {
         event.preventDefault();
+        const inputs = event.target.parentNode.parentNode.querySelectorAll('input[type=text]');
+        updateAnswerCopy(inputs);
         answersCopy.splice(index, 1);
         updateAnswerList();
+    }
+
+    function updateAnswerCopy(inputs){
+        inputs.forEach((element, i) => {
+            answersCopy[i] = element.value;
+        });
     }
 }
