@@ -1,14 +1,16 @@
-import { html } from "../lib/lit-html.js";
+import { html, nothing } from "../lib/lit-html.js";
 import { getQuizzes } from "../services/quizzesService.js";
 
-const homeTemplate = (quizzes) => html`
+const homeTemplate = (user) => html`
 <section id="welcome">
 <div class="hero layout">
     <div class="splash right-col"><i class="fas fa-clipboard-list"></i></div>
     <div class="glass welcome">
         <h1>Welcome to Quiz Fever!</h1>
         <p>Home to 157 quizzes in 12 topics. <a href="/browse">Browse all quizzes</a>.</p>
-        <a class="action cta" href="/login">Sign in to create a quiz</a>
+        ${user
+        ? nothing
+        : html`<a class="action cta" href="/login">Sign in to create a quiz</a>`}
     </div>
 </div>
 <div class="pad-large alt-page">
@@ -36,7 +38,7 @@ const quizTemplate = (quiz) => html`
 </div>
 </article>`
 
-export function homeView(ctx){
-    const allQuizzes = getQuizzes();
-    ctx.render(homeTemplate(allQuizzes));
+export function homeView(ctx) {
+    const user = ctx.user();
+    ctx.render(homeTemplate(user));
 }
