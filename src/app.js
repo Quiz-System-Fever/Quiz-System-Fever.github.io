@@ -10,9 +10,11 @@ import { loginView } from "./views/login.js";
 import { messageContext } from "./views/message.js";
 import { registerView } from "./views/register.js";
 import { profileView } from "./views/profile.js";
+import { viewLoader } from "./views/loader.js";
 
 page(userContext);
 page(renderContext);
+page(viewLoader);
 page(messageContext);
 page('/', homeView);
 page('/login', loginView);
