@@ -2,9 +2,9 @@ import { html, nothing } from "../../lib/lit-html.js";
 import { getQuestionsByQuizId } from "../../services/questionsService.js";
 import { createQuiz, getQuizById, updateQuiz } from "../../services/quizzesService.js";
 import { createSubmitHandler } from "../../services/utils.js";
-import { createQuestionView } from "./questions.js";
+import { createList } from "./list.js";
 
-const editorTemplate = (onSubmit, quiz, addQuestion) => html`
+const editorTemplate = (onSubmit, quiz, loading) => html`
 <section id="editor">
 <header class="pad-large">
     <h1>${quiz ? 'Edit quiz' : 'New quiz'}</h1>
@@ -30,23 +30,10 @@ const editorTemplate = (onSubmit, quiz, addQuestion) => html`
         </label>
         <input class="input submit action" type="submit" value="Save">
     </form>
-</div>
-${quiz ? questionsList(quiz, addQuestion) : nothing}
+    ${loading ? html`<div class="loading-overlay working"></div>` : nothing}
+    </div>
+${quiz ? createList(quiz) : nothing}
 </section>`;
-
-const questionsList = (quiz, addQuestion) => html`
-<header class="pad-large">
-<h2>Questions</h2>
-</header>
-<div class="pad-large alt-page">
-${quiz.questions.map((q, i) => createQuestionView(q, i, quiz.ctx))}
-<article class="editor-question">
-<div class="editor-input">
-    <button @click=${addQuestion} class="input submit action"><i class="fas fa-plus-circle"></i>Add question</button>
-</div>
-</article>
-</div>`
-
 
 export async function editorView(ctx) {
     const quizId = ctx.params.id
@@ -54,27 +41,19 @@ export async function editorView(ctx) {
     let questions = [];
     if (quizId) {
         [quiz, questions] = await Promise.all([
-            await getQuizById(quizId),
-            await getQuestionsByQuizId(quizId)
+            getQuizById(quizId),
+            getQuestionsByQuizId(quizId)
         ])
         quiz.questions = questions.results;
         quiz.ctx = ctx
     }
 
-    ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz, addQuestion));
-
-    function addQuestion() {
-        questions.results.push({
-            text: '',
-            answers: [],
-            correctIndex: 0
-        })
-        ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz, addQuestion));
-    }
+    ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz));
 
     async function onSubmit(ctx, data, event) {
         const quizId = ctx.params.id
         try {
+            ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz, true));
             if (data.title.trim() == '' || data.topic.trim() == '' || data.description.trim() == '') {
                 throw new Error('All fields are required!');
             }
@@ -85,11 +64,12 @@ export async function editorView(ctx) {
                 title: data.title,
                 topic: data.topic,
                 description: data.description,
-                questionCount: questions.length || 0
+                questionCount: questions.results.length || 0
             }
 
             if (quizId) {
                 await updateQuiz(quizId, quizData);
+                ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz));
                 ctx.showMessage('Quiz updated successfully. Please proceed adding with adding questions.');
             } else {
                 const result = await createQuiz(quizData, userId);
