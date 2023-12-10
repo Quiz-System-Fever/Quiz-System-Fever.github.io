@@ -39,6 +39,7 @@ const quizTemplate = (quiz) => html`
 </article>`
 
 export function homeView(ctx) {
+    ctx.loader();
     const user = ctx.user();
     ctx.render(homeTemplate(user));
 }

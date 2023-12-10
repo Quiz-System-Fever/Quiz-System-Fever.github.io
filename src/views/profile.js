@@ -50,6 +50,7 @@ const quizTemplate = (quiz, onDelete) => html`
 </article>`
 
 export async function profileView(ctx) {
+    ctx.loader();
     const user = ctx.user();
     const quizzes = await getQuizByUserId(user.objectId)
     ctx.render(profileTemplate(user, quizzes.results, onDelete));

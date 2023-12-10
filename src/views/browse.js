@@ -38,6 +38,7 @@ const quizTemplate = (quiz) => html`
 </article>`;
 
 export async function browseView(ctx) {
+    ctx.loader();
     const quizzes = await getQuizzes()
     ctx.render(browseTemplate(quizzes.results));
 }

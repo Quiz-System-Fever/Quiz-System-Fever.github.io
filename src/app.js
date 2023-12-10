@@ -7,10 +7,12 @@ import { editorView } from "./views/editorView/editor.js";
 import { detailsView } from "./views/details.js";
 import { homeView } from "./views/home.js";
 import { loginView } from "./views/login.js";
-import { messageContext } from "./views/message.js";
+import { messageContext } from "./middleware/message.js";
 import { registerView } from "./views/register.js";
 import { profileView } from "./views/profile.js";
-import { viewLoader } from "./views/loader.js";
+import { viewLoader } from "./middleware/loader.js";
+import { quizView } from "./views/quizView/quiz.js";
+import { getQuiz } from "./middleware/getQuiz.js";
 
 page(userContext);
 page(renderContext);
@@ -24,6 +26,7 @@ page('/create', editorView);
 page('/browse', browseView);
 page('/details/:id', detailsView);
 page('/edit/:id', editorView);
+page('/quiz/:id', getQuiz, quizView);
 page('/profile', profileView);
 
 page.start();

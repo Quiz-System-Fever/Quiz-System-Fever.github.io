@@ -1,6 +1,6 @@
 import { html } from "../lib/lit-html.js";
 
-const loaderTemplate = () => html`
+const loaderTemplate = (ctx) => ctx.render(html`
 <div class="pad-large alt-page async">
 <div class="sk-cube-grid">
     <div class="sk-cube sk-cube1"></div>
@@ -13,10 +13,10 @@ const loaderTemplate = () => html`
     <div class="sk-cube sk-cube8"></div>
     <div class="sk-cube sk-cube9"></div>
 </div>
-</div>`;
+</div>`);
 
 export function viewLoader(ctx, next){
-    ctx.render(loaderTemplate());
+    ctx.loader = loaderTemplate.bind(null, ctx);
 
     next();
 }

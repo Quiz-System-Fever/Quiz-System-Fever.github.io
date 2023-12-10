@@ -36,6 +36,7 @@ ${quiz ? createList(quiz) : nothing}
 </section>`;
 
 export async function editorView(ctx) {
+    ctx.loader();
     const quizId = ctx.params.id
     let quiz = null
     let questions = [];
@@ -50,7 +51,7 @@ export async function editorView(ctx) {
 
     ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz));
 
-    async function onSubmit(ctx, data, event) {
+    async function onSubmit(ctx, data) {
         const quizId = ctx.params.id
         try {
             ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz, true));
@@ -64,7 +65,6 @@ export async function editorView(ctx) {
                 title: data.title,
                 topic: data.topic,
                 description: data.description,
-                questionCount: questions.results.length || 0
             }
 
             if (quizId) {
@@ -77,7 +77,8 @@ export async function editorView(ctx) {
                 ctx.showMessage('Quiz created successfully. Please proceed adding with adding questions.');
             }
         } catch (error) {
-            return ctx.showMessage(error);
+            ctx.showMessage(error);
+            ctx.render(editorTemplate(createSubmitHandler(ctx, onSubmit), quiz));
         }
     }
 }

@@ -6,6 +6,7 @@ let state = {};
 export async function getQuiz(ctx, next) {
     const quizId = ctx.params.id;
     if (state[quizId] == undefined) {
+        ctx.loader();
         state[quizId] = await getQuizById(quizId);
         state[quizId].questions = await getQuestionsByQuizId(quizId);
     }
