@@ -36,7 +36,7 @@ const quizTemplate = (quiz, onDelete) => html`
 <div class="right-col">
     <a class="action cta" href="/details/${quiz.objectId}">View Quiz</a>
     <a class="action cta" href="/edit/${quiz.objectId}"><i class="fas fa-edit"></i></a>
-    <a class="action cta" href="javascript:void(0)" @click=${() => onDelete(quiz.objectId)}><i class="fas fa-trash-alt"></i></a>
+    <a class="action cta" href="javascript:void(0)" @click=${() => onDelete(quiz)}><i class="fas fa-trash-alt"></i></a>
 </div>
 <div class="left-col">
     <h3><a class="quiz-title-link" href="/details/${quiz.objectId}">${quiz.title}</a></h3>
@@ -54,10 +54,12 @@ export async function profileView(ctx) {
     const quizzes = await getQuizByUserId(user.objectId)
     ctx.render(profileTemplate(user, quizzes.results, onDelete));
 
-    async function onDelete(quizId) {
+    async function onDelete(quiz) {
         if (confirm('Are you sure you want to delete this quiz?')) {
-            await deleteQuiz(quizId);
-            ctx.page.redirect('/profile');
+            await deleteQuiz(quiz.objectId);
+            const quizIndex = quizzes.results.indexOf(quiz);
+            quizzes.results.splice(quizIndex, 1);
+            ctx.render(profileTemplate(user, quizzes.results, onDelete));
         }
     }
 }
