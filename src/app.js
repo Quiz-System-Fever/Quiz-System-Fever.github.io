@@ -13,6 +13,7 @@ import { profileView } from "./views/profile.js";
 import { viewLoader } from "./middleware/loader.js";
 import { quizView } from "./views/quizView/quiz.js";
 import { getQuiz } from "./middleware/getQuiz.js";
+import { summaryView } from "./views/quizView/summary.js";
 
 page(userContext);
 page(renderContext);
@@ -21,12 +22,12 @@ page(messageContext);
 page('/', homeView);
 page('/login', loginView);
 page('/register', registerView);
+page('/profile', profileView);
 page('/logout', logout);
 page('/create', editorView);
 page('/browse', browseView);
 page('/details/:id', detailsView);
 page('/edit/:id', editorView);
 page('/quiz/:id', getQuiz, quizView);
-page('/profile', profileView);
-
+page('/summary/:id', summaryView);
 page.start();
