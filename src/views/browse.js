@@ -32,7 +32,7 @@ const quizTemplate = (quiz) => html`
     <h3><a class="quiz-title-link" href="/details/${quiz.objectId}">${quiz.title}</a></h3>
     <span class="quiz-topic">Topic: ${quiz.topic}</span>
     <div class="quiz-meta">
-        <span>${quiz.questionsCount} questions</span>
+        <span>${quiz.questionCount} questions</span>
     </div>
 </div>
 </article>`;
