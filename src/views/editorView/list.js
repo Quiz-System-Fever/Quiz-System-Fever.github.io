@@ -42,9 +42,9 @@ export function createList(quiz) {
                 await deleteQuestion(questionId);
             }
 
+            quiz.questions.splice(questionIndex, 1);
             let questionCount = quiz.questions.length;
             await updateQuiz(quizId, { questionCount });
-            quiz.questions.splice(questionIndex, 1);
             ctx.showMessage('Question deleted successfully.');
             render(questionsList(quiz, addQuestion, onDelete), element);
         }
