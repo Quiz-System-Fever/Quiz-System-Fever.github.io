@@ -97,6 +97,7 @@ export async function quizView(ctx) {
 
         const quizCopy = Object.assign({}, ctx.quiz);
         const solution = await sendSolution(ctx.quiz.objectId, user.objectId, { result, total: questions.length, quizCopy });
+        ctx.clearState();
         ctx.page.redirect(`/summary/${solution.objectId}`);
     }
 }
