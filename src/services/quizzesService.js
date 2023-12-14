@@ -16,6 +16,8 @@ export const createQuiz = async (quizData, userId) => {
     return await post(baseUrl, body);
 };
 
+export const getQuizByQuery = (query) => get(`${baseUrl}?where=${query}`);
+
 export const getQuizByUserId = async (userId) => {
     const pointer = {
         owner: {
