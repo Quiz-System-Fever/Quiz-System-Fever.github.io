@@ -58,7 +58,11 @@ export async function editorView(ctx) {
             if (data.title.trim() == '' || data.topic.trim() == '' || data.description.trim() == '') {
                 throw new Error('All fields are required!');
             }
+            
             const user = ctx.user();
+            if (!user) {
+                throw new Error('You must log in to create quiz.')
+            }
             const userId = user.objectId;
 
             const quizData = {
