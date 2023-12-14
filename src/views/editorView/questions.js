@@ -61,28 +61,29 @@ export function createQuestionView(question, questionIndex, ctx, onDelete) {
                 data.answers.push(pair[1].trim());
             }
         }
+        const questionClone = JSON.parse(JSON.stringify(question));
+        questionClone.answers = data.answers.slice();
+        questionClone.correctIndex = data.correctIndex;
 
         try {
-            render(editorTemplate(question, questionIndex, onCancel, onSave, true), element);
+            render(editorTemplate(questionClone, questionIndex, onCancel, onSave, true), element);
             if (data.text == '' || data.answers.includes('')) {
                 throw new Error('All fields are required!')
             }
 
             if (question.objectId) {
                 await updateQuestion(question.objectId, data);
-                Object.assign(question, data);
-                ctx.showMessage('Question updated successfully.');
-                render(viewTemplate(question, questionIndex, onEdit, onDelete), element);
             } else {
                 const result = await createQuestion(data, quizId);
                 question.objectId = result.objectId;
-                Object.assign(question, data);
-                ctx.showMessage('Question created successfully.');
-                render(viewTemplate(question, questionIndex, onEdit, onDelete), element);
             }
+            
+            Object.assign(question, data);
+            ctx.showMessage('Question created successfully.');
+            render(viewTemplate(question, questionIndex, onEdit, onDelete), element);
         } catch (error) {
             ctx.showMessage(error);
-            render(editorTemplate(question, questionIndex, onCancel, onSave), element);
+            render(editorTemplate(questionClone, questionIndex, onCancel, onSave), element);
         }
     }
 }
