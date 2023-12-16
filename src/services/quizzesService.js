@@ -2,8 +2,8 @@ import { deleteReq, get, post, put } from "./api.js";
 
 const baseUrl = 'https://parseapi.back4app.com/classes/Quizzes';
 
-export const getQuizzes = () => get(baseUrl);
-export const getQuizById = (quizId) => get(`${baseUrl}/${quizId}?include=owner`);
+export const getQuizzes = async () => await get(baseUrl);
+export const getQuizById = async (quizId) => await get(`${baseUrl}/${quizId}?include=owner`);
 
 export const createQuiz = async (quizData, userId) => {
     const body = Object.assign({}, quizData, {
@@ -33,5 +33,5 @@ export const getQuizByUserId = async (userId) => {
     return await get(baseUrl + '?where=' + query)
 }
 
-export const updateQuiz = async (quizId, quizData) => put(`${baseUrl}/${quizId}`, quizData);
-export const deleteQuiz = (quizId) => deleteReq(`${baseUrl}/${quizId}`, {});
+export const updateQuiz = async (quizId, quizData) => await put(`${baseUrl}/${quizId}`, quizData);
+export const deleteQuiz = async (quizId) => await deleteReq(`${baseUrl}/${quizId}`, {});

@@ -26,7 +26,7 @@ async function request(method, url, data) {
         let response = await fetch(url, options);
         if (!response.ok) {
             let error = await response.json();
-            throw new Error(error.error);
+            throw new Error(error);
         }
 
         if (response.status == 204) {

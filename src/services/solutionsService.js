@@ -2,7 +2,7 @@ import { get, post } from "./api.js";
 
 const baseUrl = 'https://parseapi.back4app.com/classes/Solution';
 
-export const getSolutionById = (solutionId) => get(`${baseUrl}/${solutionId}`);
+export const getSolutionById = async (solutionId) => await get(`${baseUrl}/${solutionId}`);
 
 export const getSolutionsByOwnerId = async (ownerId) => {
     const pointer = {

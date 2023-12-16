@@ -35,5 +35,5 @@ export const getQuestionsByQuizId = async (quizId) => {
 
     return await get(baseUrl + '?where=' + query);
 }
-export const updateQuestion = (questionId, questionData) => put(`${baseUrl}/${questionId}`, questionData)
-export const deleteQuestion = (questionId) => deleteReq(`${baseUrl}/${questionId}`, {});
+export const updateQuestion = async (questionId, questionData) => await put(`${baseUrl}/${questionId}`, questionData)
+export const deleteQuestion = async (questionId) => await deleteReq(`${baseUrl}/${questionId}`, {});
