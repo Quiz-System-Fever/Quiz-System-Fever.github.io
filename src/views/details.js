@@ -7,7 +7,7 @@ const detailsTemplate = (quiz, user) => html`
 <div class="pad-large alt-page">
     <article class="details">
         <h1>${quiz.title}</h1>
-        <span class="quiz-topic">A quiz by <a href="/profile/${quiz.owner.objectId}">${quiz.owner.username}</a> on the topic of Languages</span>
+        <span class="quiz-topic">A quiz by ${quiz.owner.username} on the topic of Languages</span>   
         <div class="quiz-meta">
             <span>${quiz.questionCount} Questions</span>
         </div>
