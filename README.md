@@ -24,3 +24,48 @@ This is a system for creating, completing and managing quizzes with free access.
 * Quiz Result - summary of the solution, possibility to check the wrong and correct answers, possibility to retake the quiz.
 * Profile Page - Information for created quizzes and all quiz solutions.
 * Quiz Editor - Editor for quizzes, questions and answers. 
+
+## Data Structure
+### Collections 
+* Sessions (service)
+* Users (service)
+```javascript
+{
+    emails: String,
+    username: String,
+    password: String
+}
+```
+* Quizzes
+```javascript
+{
+    title: String,
+    topic: String,
+    questionCount: Number
+}
+```
+* Question
+```javascript
+{
+    owner: Pointer, 
+    quiz: Pointer,
+    text: String, 
+    answers: Array,
+    correctIndex: Number
+}
+```
+* Solution
+```javascript
+{
+    owner: Pointer, 
+    quiz: Pointer,
+    result: Number, 
+    total: Number,
+    quizCopy: Object
+}
+```
+
+## Accessibility Control
+* Guest users can register, browse quizzes and inspec quiz details.
+* Registered users can create, edit, contest quizzes, inspec their solution results.
+* Only the creator of a test can edit and delete the quiz.
