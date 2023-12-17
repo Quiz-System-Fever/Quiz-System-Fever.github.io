@@ -29,8 +29,8 @@ const profileTemplate = (user, quizzes, solutions, onDelete) => html`<section id
 
 const resultTemplate = ({ objectId, createdAt, quizCopy }, isCorrect) => html`
 <tr class="results-row">
-<td class="cell-1">${createdAt}</td>
-<td class="cell-2"><a href="/summary/${objectId}">RISC Architecture</a></td>
+<td class="cell-1">${createdAt.split('T')[0]}</td>
+<td class="cell-2"><a href="/summary/${objectId}">${quizCopy.title}</a></td>
 <td class="cell-3 ${isCorrect ? 's-correct' : 's-incorrect'}">
         ${((quizCopy.summary / quizCopy.questions.results.length) * 100).toFixed(0)}%</td >
     <td class="cell-4 ${isCorrect ? 's-correct' : 's-incorrect'}">
