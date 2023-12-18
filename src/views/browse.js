@@ -8,7 +8,7 @@ const browseTemplate = (quizzes, onSearch) => html`
         <input class="input" type="text" name="query">
         <select class="input" name="topic">
             <option value="all">All Categories</option>
-            <option value="it">Languages</option>
+            <option value="languages">Languages</option>
             <option value="hardware">Hardware</option>
             <option value="software">Tools and Software</option>
         </select>
