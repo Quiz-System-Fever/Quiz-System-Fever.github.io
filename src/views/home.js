@@ -1,13 +1,14 @@
 import { html, nothing } from "../lib/lit-html.js";
 import { getQuizzes } from "../services/quizzesService.js";
+import { getSolutionByQuizId } from "../services/solutionsService.js";
 
-const homeTemplate = (user, quizzes) => html`
+const homeTemplate = (user, quiz) => html`
 <section id="welcome">
 <div class="hero layout">
     <div class="splash right-col"><i class="fas fa-clipboard-list"></i></div>
     <div class="glass welcome">
         <h1>Welcome to Quiz Fever!</h1>
-        <p>Home to ${quizzes.length} quizzes in ${quizzes.uniqueTopics} topics. <a href="/browse">Browse all quizzes</a>.</p>
+        <p>Home to ${quiz.totalQuizzes} quizzes in ${quiz.uniqueTopics} topics. <a href="/browse">Browse all quizzes</a>.</p>
         ${user
         ? nothing
         : html`<a class="action cta" href="/login">Sign in to create a quiz</a>`}
@@ -15,7 +16,7 @@ const homeTemplate = (user, quizzes) => html`
 </div>
 <div class="pad-large alt-page">
     <h2>Our most recent quiz:</h2>
-    ${quizTemplate(quizzes[quizzes.length - 1])}
+    ${quizTemplate(quiz)}
     <div>
         <a class="action cta" href="/browse">Browse all quizzes</a>
     </div>
@@ -33,7 +34,7 @@ const quizTemplate = (quiz) => html`
     <div class="quiz-meta">
         <span>${quiz.questionCount} questions</span>
         <span>|</span>
-        <span>Taken 54 times</span>
+        <span>Taken ${quiz.solutions} times</span>
     </div>
 </div>
 </article>`
@@ -42,13 +43,18 @@ export async function homeView(ctx) {
     ctx.loader();
     const user = ctx.user();
     const quizzes = await getQuizzes();
+    const lastAddedQuiz = quizzes.results[quizzes.results.length - 1];
+    const solutions = await getSolutionByQuizId(lastAddedQuiz.objectId);
+
     const uniqueTopics = quizzes.results.reduce((a, q) => {
         if (!a.includes(q.topic)) {
             a.push(q.topic);
         }
         return a
     }, []);
-    
-    quizzes.results.uniqueTopics = uniqueTopics.length;
-    ctx.render(homeTemplate(user, quizzes.results));
+
+    lastAddedQuiz.totalQuizzes = quizzes.results.length;
+    lastAddedQuiz.solutions = solutions.results.length;
+    lastAddedQuiz.uniqueTopics = uniqueTopics.length;
+    ctx.render(homeTemplate(user, lastAddedQuiz));
 }

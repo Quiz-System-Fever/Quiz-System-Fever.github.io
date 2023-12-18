@@ -2,7 +2,22 @@ import { get, post } from "./api.js";
 
 const baseUrl = 'https://parseapi.back4app.com/classes/Solution';
 
+export const getAllSolution = async () => await get(baseUrl);
 export const getSolutionById = async (solutionId) => await get(`${baseUrl}/${solutionId}`);
+
+export const getSolutionByQuizId = async (quizId) => {
+    const pointer = {
+        quiz: {
+            __type: 'Pointer',
+            'className': 'Quizzes',
+            objectId: quizId,
+        }
+    }
+
+    const stringifyPointer = JSON.stringify(pointer);
+    const query = encodeURIComponent(stringifyPointer);
+    return await get(baseUrl + '?where=' + query);
+}
 
 export const getSolutionsByOwnerId = async (ownerId) => {
     const pointer = {

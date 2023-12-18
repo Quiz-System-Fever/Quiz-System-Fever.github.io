@@ -1,8 +1,8 @@
 import { html } from "../lib/lit-html.js";
 import { deleteQuiz, getQuizByUserId } from "../services/quizzesService.js";
-import { getSolutionsByOwnerId } from "../services/solutionsService.js";
+import { getAllSolution, getSolutionsByOwnerId } from "../services/solutionsService.js";
 
-const profileTemplate = (user, quizzes, solutions, onDelete) => html`<section id="profile">
+const profileTemplate = (user, quizzes, ownSolutions, allSolutions, onDelete) => html`<section id="profile">
 <header class="pad-large">
     <h1>Profile Page</h1>
 </header>
@@ -14,7 +14,7 @@ const profileTemplate = (user, quizzes, solutions, onDelete) => html`<section id
         <h2>Your Quiz Results</h2>
         <table class="quiz-results">
             <tbody>
-            ${solutions.map(s => resultTemplate(s, s.quizCopy.summary > s.quizCopy.questions.results.length / 2))}
+            ${ownSolutions.map(s => resultTemplate(s, s.quizCopy.summary > s.quizCopy.questions.results.length / 2))}
             </tbody>
         </table>
     </article>
@@ -23,7 +23,7 @@ const profileTemplate = (user, quizzes, solutions, onDelete) => html`<section id
     <h2>Quizzes created by you</h2>
 </header>
 <div class="pad-large alt-page">
-   ${quizzes.length ? quizzes.map(q => quizTemplate(q, onDelete, solutions)) : html`<h3>You don't have quizzes created by you</h3>`}
+   ${quizzes.length ? quizzes.map(q => quizTemplate(q, onDelete, allSolutions)) : html`<h3>You don't have quizzes created by you</h3>`}
 </div>
 </section>`;
 
@@ -58,22 +58,23 @@ const quizTemplate = (quiz, onDelete, solutions) => html`
 export async function profileView(ctx) {
     ctx.loader();
     const user = ctx.user();
-    const [solutions, quizzes] = await Promise.all([
+    const [allSolutions, ownSolutions, quizzes] = await Promise.all([
+        getAllSolution(),
         getSolutionsByOwnerId(user.objectId),
         getQuizByUserId(user.objectId)]);
 
-    solutions.results.map(s =>
+    ownSolutions.results.map(s =>
         s.quizCopy.summary = s.quizCopy.answers.reduce((a, cr, i) =>
             a + Number(cr == s.quizCopy.questions.results[i].correctIndex), 0));
 
-    ctx.render(profileTemplate(user, quizzes.results, solutions.results, onDelete));
+    ctx.render(profileTemplate(user, quizzes.results, ownSolutions.results, allSolutions.results, onDelete));
 
     async function onDelete(quiz) {
         if (confirm('Are you sure you want to delete this quiz?')) {
             await deleteQuiz(quiz.objectId);
             const quizIndex = quizzes.results.indexOf(quiz);
             quizzes.results.splice(quizIndex, 1);
-            ctx.render(profileTemplate(user, quizzes.results, solutions.results, onDelete));
+            ctx.render(profileTemplate(user, quizzes.results, ownSolutions.results, allSolutions.results, onDelete));
         }
     }
 }
